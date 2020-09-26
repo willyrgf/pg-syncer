@@ -17,6 +17,7 @@ var (
 
 // SyncersAccess informations
 type SyncersAccess struct {
+	Enabled               bool   `mapstructure:"enabled"`
 	SourceRepository      string `mapstructure:"source_repository"`
 	SourceDb              string `mapstructure:"source_db"`
 	SourceQuery           string `mapstructure:"source_query"`
