@@ -6,6 +6,7 @@ url = "postgres://user:pass@127.0.0.1:5433/db2?pool_max_conns=2"
 
 [syncers]
     [[syncers.access]]
+    enabled = true
     source_repository = "repostory_1"
     source_db = "cryp"
     source_query = "select func();"
@@ -17,6 +18,7 @@ url = "postgres://user:pass@127.0.0.1:5433/db2?pool_max_conns=2"
     clean_destination_table = false
 
     [[syncers.access]]
+    enabled = false
     source_repository = "repostory_1"
     source_db = "cryp"
     source_query = "select func2();"
