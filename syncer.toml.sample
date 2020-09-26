@@ -13,7 +13,8 @@ url = "postgres://user:pass@127.0.0.1:5433/db2?pool_max_conns=2"
     destination_repository = "repostory_2"
     destination_db = "report"
     destination_table = "daily_report"
-    periodicity = "1 minute"
+    periodicity_value = "1"
+    periodicity_unit = "minute"
     only_diff = true
     clean_destination_table = false
 
@@ -25,7 +26,8 @@ url = "postgres://user:pass@127.0.0.1:5433/db2?pool_max_conns=2"
     destination_repository = "repostory_2"
     destination_db = "report"
     destination_table = "global_report"
-    periodicity = "1 day"
+    periodicity_value = "1"
+    periodicity_unit = "day"
     only_diff = false
     clean_destination_table = true
 

@@ -42,4 +42,9 @@ func (s *Syncers) Close(c *Config) {
 // Start run all services syncers
 func Start(ctx context.Context, s *Syncers, c *Config) {
 	log.Debugf("Start(ctx, s, c): %+v, %+v, %+v", ctx, s, c)
+
+	for syncerConfigName, syncerConfig := range c.Syncers {
+		scheduler, err := syncerConfig.GetScheduler()
+		log.Debugf("syncer.Start(ctx, s, c): syncerConfigName=%+v, syncerConfig=%+v, scheduler=%+v, err=%w", syncerConfigName, syncerConfig, scheduler, err)
+	}
 }

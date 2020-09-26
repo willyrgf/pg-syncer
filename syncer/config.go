@@ -15,8 +15,8 @@ var (
 	defaultConfigFile = "./syncer.toml"
 )
 
-// SyncersAccess informations
-type SyncersAccess struct {
+// Access informations
+type Access struct {
 	Enabled               bool   `mapstructure:"enabled"`
 	SourceRepository      string `mapstructure:"source_repository"`
 	SourceDb              string `mapstructure:"source_db"`
@@ -24,13 +24,14 @@ type SyncersAccess struct {
 	DestinationRepository string `mapstructure:"destination_repository"`
 	DestinationDb         string `mapstructure:"destination_db"`
 	DestinationTable      string `mapstructure:"destination_table"`
-	Periodicity           string `mapstructure:"periodicity"`
+	PeriodicityValue      uint64 `mapstructure:"periodicity_value"`
+	PeriodicityUnit       string `mapstructure:"periodicity_unit"`
 	OnlyDiff              bool   `mapstructure:"only_diff"`
 	CleanDestinationTable bool   `mapstructure:"clean_destination_table"`
 }
 
 // SyncersConf map to SyncersAccess confs with hash like a id
-type SyncersConf map[string]SyncersAccess
+type SyncersConf map[string]Access
 
 // RepositoryConfig a config to repository
 type RepositoryConfig struct {
@@ -98,14 +99,14 @@ func parse(cfg *Config) (err error) {
 
 	cfg.Repositories = repos
 
-	var sa []SyncersAccess
-	err = viper.UnmarshalKey("syncers.access", &sa)
+	var a []Access
+	err = viper.UnmarshalKey("syncers.access", &a)
 	if err != nil {
 		log.Errorf("config.Parse(): error=%w", err)
 		return
 	}
 	syncers := make(SyncersConf)
-	for _, s := range sa {
+	for _, s := range a {
 		syncers[helpers.ToSha256(s)] = s
 	}
 
