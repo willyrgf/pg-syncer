@@ -1,6 +1,8 @@
 package syncer
 
 import (
+	"context"
+
 	"github.com/cryp-com-br/pg-syncer/repository"
 	log "github.com/sirupsen/logrus"
 )
@@ -35,4 +37,9 @@ func (s *Syncers) Close(c *Config) {
 	for repoName := range c.Repositories {
 		(*s)[repoName].Repo.Close()
 	}
+}
+
+// Start run all services syncers
+func Start(ctx context.Context, s *Syncers, c *Config) {
+	log.Debugf("Start(ctx, s, c): %+v, %+v, %+v", ctx, s, c)
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"os"
 
@@ -49,4 +50,9 @@ func main() {
 	syncers := syncer.New(syncersConfig)
 	defer syncers.Close(syncersConfig)
 	log.Debugf("main(): syncers=%+v", syncers)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	syncer.Start(ctx, syncers, syncersConfig)
 }
