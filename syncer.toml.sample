@@ -1,0 +1,29 @@
+[repository_1]
+url = "postgres://user:pass@127.0.0.1:5432/db?pool_max_conns=2"
+
+[repository_2]
+url = "postgres://user:pass@127.0.0.1:5433/db2?pool_max_conns=2"
+
+[syncers]
+    [[syncers.access]]
+    source_repository = "repostory_1"
+    source_db = "cryp"
+    source_query = "select func();"
+    destination_repository = "repostory_2"
+    destination_db = "report"
+    destination_table = "daily_report"
+    periodicity = "1 minute"
+    only_diff = true
+    clean_destination_table = false
+
+    [[syncers.access]]
+    source_repository = "repostory_1"
+    source_db = "cryp"
+    source_query = "select func2();"
+    destination_repository = "repostory_2"
+    destination_db = "report"
+    destination_table = "global_report"
+    periodicity = "1 day"
+    only_diff = false
+    clean_destination_table = true
+

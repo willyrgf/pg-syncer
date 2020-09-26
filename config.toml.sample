@@ -1,0 +1,6 @@
+[config]
+dev = true
+trace = false
+
+[repository]
+url = "postgres://user:pass@127.0.0.1:54325/syncer?pool_max_conns=2"
