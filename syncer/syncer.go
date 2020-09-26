@@ -29,3 +29,10 @@ func New(c *Config) *Syncers {
 
 	return &syncers
 }
+
+// Close finish the Syncers
+func (s *Syncers) Close(c *Config) {
+	for repoName := range c.Repositories {
+		(*s)[repoName].Repo.Close()
+	}
+}

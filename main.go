@@ -47,5 +47,6 @@ func main() {
 	log.Debugf("main(): config=%+v", syncersConfig)
 
 	syncers := syncer.New(syncersConfig)
+	defer syncers.Close(syncersConfig)
 	log.Debugf("main(): syncers=%+v", syncers)
 }
