@@ -17,7 +17,7 @@ type Syncer struct {
 type Syncers map[string]Syncer
 
 // New create the map Syncers
-func New(c *Config) *Syncers {
+func New(c *Config) Syncers {
 	var syncer Syncer
 	syncers := make(Syncers)
 	for repoName, repo := range c.Repositories {
@@ -29,27 +29,42 @@ func New(c *Config) *Syncers {
 		syncers[syncer.Name] = syncer
 	}
 
-	return &syncers
+	return syncers
 }
 
 // Close finish the Syncers
-func (s *Syncers) Close(c *Config) {
+func (s Syncers) Close(c *Config) {
 	for repoName := range c.Repositories {
-		(*s)[repoName].Repo.Close()
+		s[repoName].Repo.Close()
 	}
 }
 
 // Start run all services syncers
-func Start(ctx context.Context, s *Syncers, c *Config) error {
+func Start(ctx context.Context, s Syncers, c *Config) error {
 	log.Debugf("Start(ctx, s, c): %+v, %+v, %+v", ctx, s, c)
 
 	for syncerConfigName, syncerConfig := range c.Syncers {
+		// skip disabled syncer access
+		if !syncerConfig.Enabled {
+			continue
+		}
+
 		scheduler, err := syncerConfig.GetScheduler()
 		if err != nil {
 			log.Errorf("syncer.Start(ctx, s, c): syncerConfig.GetScheduler() err=%w", err)
 			return err
 		}
 		log.Debugf("syncer.Start(ctx, s, c): syncerConfigName=%+v, syncerConfig=%+v, scheduler=%+v, err=%w", syncerConfigName, syncerConfig, scheduler, err)
+
+		service := NewService(s[syncerConfig.SourceRepository], s[syncerConfig.DestinationRepository], syncerConfig)
+		_, err = scheduler.Do(service.Run, ctx)
+		if err != nil {
+			log.Debugf("syncer.Start(): error on job; err=%w", err)
+			return err
+		}
+
+		scheduler.StartBlocking()
+
 	}
 
 	return nil
