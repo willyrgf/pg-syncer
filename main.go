@@ -54,5 +54,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	syncer.Start(ctx, syncers, syncersConfig)
+	if err := syncer.Start(ctx, syncers, syncersConfig); err != nil {
+		log.Fatalf("main(): syncer.Start() error=%w", err)
+	}
 }
