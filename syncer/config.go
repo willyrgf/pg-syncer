@@ -23,6 +23,7 @@ type Access struct {
 	SourceQuery           string `mapstructure:"source_query"`
 	DestinationRepository string `mapstructure:"destination_repository"`
 	DestinationDb         string `mapstructure:"destination_db"`
+	DestinationSchema     string `mapstructure:"destination_schema"`
 	DestinationTable      string `mapstructure:"destination_table"`
 	PeriodicityValue      uint64 `mapstructure:"periodicity_value"`
 	PeriodicityUnit       string `mapstructure:"periodicity_unit"`
