@@ -2,7 +2,6 @@ package syncer
 
 import (
 	"context"
-	"fmt"
 
 	pgx "github.com/jackc/pgx/v4"
 	log "github.com/sirupsen/logrus"
@@ -43,38 +42,24 @@ func (s *Service) Run(ctx context.Context) error {
 	defer destinationConn.Conn.Release()
 
 	// TODO: create a module to handle the pg actions and implement getTableColumns
-	rows, err := destinationConn.Conn.Query(ctx, "select column_name from information_schema.columns where table_name = $1", s.Access.DestinationTable)
+	destinationColumns, err := s.getTableColumns(ctx, sourceConn, destinationConn)
 	if err != nil {
-		log.Errorf("service.Run(): destinationConn.Conn.Query error=%w", err)
+		log.Errorf("service.Run(): s.getTableColumns() error=%w", err)
 		return err
 	}
 
-	var destinationColumns []string
-	for rows.Next() {
-		var c string
-		rows.Scan(&c)
-		destinationColumns = append(destinationColumns, c)
-	}
-
-	if rows.Err() != nil {
-		log.Errorf("service.Run(): destinationConn.Conn.Query rows.Err()=%w", rows.Err())
-		return rows.Err()
-	}
-
-	rows.Close()
-
 	log.Debugf("service.Run(): destinationColumns: %+v", destinationColumns)
+
 	// TODO: implements the clear_destination_table
 	if s.Access.SyncMode == FullSync {
-		query := fmt.Sprintf("truncate table %s.%s", s.Access.DestinationSchema, s.Access.DestinationTable)
-		_, err = destinationConn.Conn.Exec(ctx, query)
+		err = s.truncateTable(ctx, destinationConn, s.Access.DestinationSchema, s.Access.DestinationTable)
 		if err != nil {
-			log.Errorf("service.Run(): destinationConn.Conn.Query('truncate table') error=%w", err)
+			log.Errorf("service.Run(): s.truncateTable()  error=%w", err)
 			return err
 		}
 
 		// TODO: move that to a function
-		rows, err = sourceConn.Conn.Query(ctx, s.Access.SourceQuery)
+		rows, err := sourceConn.Conn.Query(ctx, s.Access.SourceQuery)
 		if err != nil {
 			log.Errorf("service.Run(): sourceConn.Conn.Query(ctx, s.Access.SourceQuery) error=%w", err)
 			return err
