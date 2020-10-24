@@ -17,18 +17,17 @@ var (
 
 // Access informations
 type Access struct {
-	Enabled               bool   `mapstructure:"enabled"`
-	SourceRepository      string `mapstructure:"source_repository"`
-	SourceDb              string `mapstructure:"source_db"`
-	SourceQuery           string `mapstructure:"source_query"`
-	DestinationRepository string `mapstructure:"destination_repository"`
-	DestinationDb         string `mapstructure:"destination_db"`
-	DestinationSchema     string `mapstructure:"destination_schema"`
-	DestinationTable      string `mapstructure:"destination_table"`
-	PeriodicityValue      uint64 `mapstructure:"periodicity_value"`
-	PeriodicityUnit       string `mapstructure:"periodicity_unit"`
-	OnlyDiff              bool   `mapstructure:"only_diff"`
-	CleanDestinationTable bool   `mapstructure:"clean_destination_table"`
+	Enabled               bool     `mapstructure:"enabled"`
+	SyncMode              SyncMode `mapstructure:"sync_mode"`
+	SourceRepository      string   `mapstructure:"source_repository"`
+	SourceDb              string   `mapstructure:"source_db"`
+	SourceQuery           string   `mapstructure:"source_query"`
+	DestinationRepository string   `mapstructure:"destination_repository"`
+	DestinationDb         string   `mapstructure:"destination_db"`
+	DestinationSchema     string   `mapstructure:"destination_schema"`
+	DestinationTable      string   `mapstructure:"destination_table"`
+	PeriodicityValue      uint64   `mapstructure:"periodicity_value"`
+	PeriodicityUnit       string   `mapstructure:"periodicity_unit"`
 }
 
 // SyncersConf map to SyncersAccess confs with hash like a id

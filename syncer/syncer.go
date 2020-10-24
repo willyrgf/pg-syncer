@@ -7,6 +7,18 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// SyncMode represents the types of syncs
+type SyncMode string
+
+const (
+	// FullSync truncate the table and copy all result of query to then
+	FullSync SyncMode = "fullsync"
+	// OnlyDiff sync only the diff data between the source and destination
+	OnlyDiff SyncMode = "onlydiff"
+	// PartialSync copy all result from query without truncate the destination
+	PartialSync SyncMode = "partialsync"
+)
+
 // Syncer is a struct of a sync with repository
 type Syncer struct {
 	Name string

@@ -7,6 +7,7 @@ url = "postgres://user:pass@127.0.0.1:5433/db2?pool_max_conns=2"
 [syncers]
     [[syncers.access]]
     enabled = true
+    sync_mode = "fullsync" # fullsync, onlydiff, partialsync ...
     source_repository = "repostory_1"
     source_db = "cryp"
     source_query = "select func();"
@@ -16,11 +17,10 @@ url = "postgres://user:pass@127.0.0.1:5433/db2?pool_max_conns=2"
     destination_table = "daily_report"
     periodicity_value = "1"
     periodicity_unit = "minute"
-    only_diff = true
-    clean_destination_table = false
 
     [[syncers.access]]
     enabled = false
+    sync_mode = "fullsync" # fullsync, onlydiff, partialsync ...
     source_repository = "repostory_1"
     source_db = "cryp"
     source_query = "select func2();"
@@ -30,6 +30,4 @@ url = "postgres://user:pass@127.0.0.1:5433/db2?pool_max_conns=2"
     destination_table = "global_report"
     periodicity_value = "1"
     periodicity_unit = "day"
-    only_diff = false
-    clean_destination_table = true
 
