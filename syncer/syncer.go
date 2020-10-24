@@ -71,7 +71,7 @@ func Start(ctx context.Context, s Syncers, c *Config) error {
 		service := NewService(s[syncerConfig.SourceRepository], s[syncerConfig.DestinationRepository], syncerConfig)
 		_, err = scheduler.Do(service.Run, ctx)
 		if err != nil {
-			log.Debugf("syncer.Start(): error on job; err=%w", err)
+			log.Debugf("syncer.Start(): error on create job; err=%w", err)
 			return err
 		}
 

@@ -2,8 +2,8 @@ package syncer
 
 import (
 	"context"
+	"fmt"
 
-	pgx "github.com/jackc/pgx/v4"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -41,48 +41,28 @@ func (s *Service) Run(ctx context.Context) error {
 	}
 	defer destinationConn.Conn.Release()
 
-	// TODO: create a module to handle the pg actions and implement getTableColumns
-	destinationColumns, err := s.getTableColumns(ctx, sourceConn, destinationConn)
-	if err != nil {
-		log.Errorf("service.Run(): s.getTableColumns() error=%w", err)
-		return err
-	}
+	log.Debugf("service.Run(): sourceConn=%+v; destinationConn=%+v", sourceConn, destinationConn)
 
-	log.Debugf("service.Run(): destinationColumns: %+v", destinationColumns)
+	switch s.Access.SyncMode {
+	case FullSync:
+		log.Debugf("sync_mode selected: %s", FullSync)
 
-	// TODO: implements the clear_destination_table
-	if s.Access.SyncMode == FullSync {
 		err = s.truncateTable(ctx, destinationConn, s.Access.DestinationSchema, s.Access.DestinationTable)
 		if err != nil {
 			log.Errorf("service.Run(): s.truncateTable()  error=%w", err)
 			return err
 		}
 
-		// TODO: move that to a function
-		rows, err := sourceConn.Conn.Query(ctx, s.Access.SourceQuery)
+		err = s.copyFromSelect(ctx, sourceConn, destinationConn)
 		if err != nil {
-			log.Errorf("service.Run(): sourceConn.Conn.Query(ctx, s.Access.SourceQuery) error=%w", err)
+			log.Errorf("service.Run(): s.copyFromSelect()  error=%w", err)
 			return err
 		}
+	default:
+		log.Errorf("the sync_mode configured is not implemented yet: %s", s.Access.SyncMode)
+		return fmt.Errorf("the sync_mode configured is not implemented yet: %s", s.Access.SyncMode)
 
-		destinationIdentifier := pgx.Identifier{s.Access.DestinationSchema, s.Access.DestinationTable}
-
-		copyCount, err := destinationConn.Conn.CopyFrom(ctx, destinationIdentifier, destinationColumns, rows)
-		if err != nil {
-			log.Errorf("service.Run(): sourceConn.Conn.CopyFrom() error=%w", err)
-			return err
-		}
-		if rows.Err() != nil {
-			log.Errorf("service.Run(): destinationConn.Conn.Query rows.Err()=%w", rows.Err())
-			return rows.Err()
-		}
-
-		rows.Close()
-
-		log.Debugf("service.Run(): copyCount: %+v", copyCount)
 	}
-
-	log.Debugf("service.Run(): sourceConn=%+v; destinationConn=%+v", sourceConn, destinationConn)
 
 	return nil
 }
