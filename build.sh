@@ -6,5 +6,5 @@ pGOOS=(linux freebsd)
 GOARCH=amd64
 
 for GOOS in "${pGOOS[@]}"; do
-  GOOS="$GOOS" GOARCH="$GOARCH" go build -o bin/rerest-"$GOOS"-"$GOARCH"
+  GOOS="$GOOS" GOARCH="$GOARCH" go build -o bin/pgsync-"$GOOS"-"$GOARCH"
 done
