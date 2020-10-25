@@ -1,3 +1,4 @@
 # ignoring config files
 syncer.toml
 config.toml
+/bin/
