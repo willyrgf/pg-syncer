@@ -68,7 +68,7 @@ func getDefaultConfig(file string) (fileConfig string) {
 }
 
 func viperCfg() {
-	configFile = getDefaultConfig(getEnvConfig("CONF"))
+	configFile = getDefaultConfig(getEnvConfig("SYNCER_CONF"))
 	dir, file := filepath.Split(configFile)
 	file = strings.TrimSuffix(file, filepath.Ext(file))
 	viper.AddConfigPath(dir)
