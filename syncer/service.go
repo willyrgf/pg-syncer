@@ -46,7 +46,6 @@ func (s *Service) Run(ctx context.Context) error {
 	switch s.Access.SyncMode {
 	case FullSync:
 		log.Debugf("sync_mode selected: %s", FullSync)
-
 		err = s.truncateTable(ctx, destinationConn, s.Access.DestinationSchema, s.Access.DestinationTable)
 		if err != nil {
 			log.Errorf("service.Run(): s.truncateTable()  error=%w", err)
@@ -58,6 +57,8 @@ func (s *Service) Run(ctx context.Context) error {
 			log.Errorf("service.Run(): s.copyFromSelect()  error=%w", err)
 			return err
 		}
+		log.Debugf("finish the job, sync_mode selected: %s", FullSync)
+
 	default:
 		log.Errorf("the sync_mode configured is not implemented yet: %s", s.Access.SyncMode)
 		return fmt.Errorf("the sync_mode configured is not implemented yet: %s", s.Access.SyncMode)
