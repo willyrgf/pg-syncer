@@ -2,14 +2,12 @@ package syncer
 
 import (
 	"errors"
-	"time"
 
 	"github.com/go-co-op/gocron"
 )
 
-// GetScheduler translate the syncersaccess
-func (a *Access) GetScheduler() (scheduler *gocron.Scheduler, err error) {
-	scheduler = gocron.NewScheduler(time.Local)
+// SetScheduler translate the syncersaccess
+func (a *Access) SetScheduler(scheduler *gocron.Scheduler) (err error) {
 	switch a.PeriodicityUnit {
 	case "second", "seconds":
 		scheduler.Every(a.PeriodicityValue).Seconds()

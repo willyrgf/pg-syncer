@@ -2,8 +2,10 @@ package syncer
 
 import (
 	"context"
+	"time"
 
 	"github.com/cryp-com-br/pg-syncer/repository"
+	"github.com/go-co-op/gocron"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -52,8 +54,10 @@ func (s Syncers) Close(c *Config) {
 }
 
 // Start run all services syncers
-func Start(ctx context.Context, s Syncers, c *Config) error {
+func Start(ctx context.Context, s Syncers, c *Config) (err error) {
 	log.Debugf("Start(ctx, s, c): %+v, %+v, %+v", ctx, s, c)
+
+	scheduler := gocron.NewScheduler(time.Local)
 
 	for syncerConfigName, syncerConfig := range c.Syncers {
 		// skip disabled syncer access
@@ -61,7 +65,7 @@ func Start(ctx context.Context, s Syncers, c *Config) error {
 			continue
 		}
 
-		scheduler, err := syncerConfig.GetScheduler()
+		err = syncerConfig.SetScheduler(scheduler)
 		if err != nil {
 			log.Errorf("syncer.Start(ctx, s, c): syncerConfig.GetScheduler() err=%w", err)
 			return err
@@ -75,9 +79,8 @@ func Start(ctx context.Context, s Syncers, c *Config) error {
 			return err
 		}
 
-		scheduler.StartBlocking()
-
 	}
+	scheduler.StartBlocking()
 
 	return nil
 }
