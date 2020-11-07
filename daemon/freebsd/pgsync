@@ -1,0 +1,47 @@
+#!/bin/sh
+
+#
+# PROVIDE: pgsync
+# REQUIRE: NETWORKING SERVERS
+# KEYWORD:
+
+. /etc/rc.subr
+
+name="pgsync"
+rcvar="${name}_enable"
+command="/usr/local/sbin/pgsync"
+pidfile="/var/run/${name}.pid"
+logfile="/var/log/${name}.log"
+
+load_rc_config $name
+: ${pgsync_enable:="NO"}
+: ${pgsync_conf="/usr/local/etc/pgsync/config.toml"}
+: ${pgsync_syncer_conf="/usr/local/etc/pgsync/syncer.toml"}
+
+start_cmd="pgsync_start"
+stop_cmd="pgsync_stop"
+status_cmd="pgsync_status"
+
+pgsync_start() {
+  CONF="${pgsync_conf}" SYNCER_CONF=${pgsync_syncer_conf} /usr/sbin/daemon -P ${pidfile} -r -o ${logfile} ${command}
+}
+
+pgsync_stop() {
+  if [ -e "${pidfile}" ]; then
+    kill -s TERM `cat ${pidfile}`
+  else
+    echo "${name} is not running"
+  fi
+
+}
+
+pgsync_status() {
+ if [ -e "${pidfile}" ]; then
+   echo "${name} is running as pid `cat ${pidfile}`"
+ else
+   echo "${name} is not running"
+ fi
+}
+
+run_rc_command "$1"
+
