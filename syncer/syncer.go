@@ -80,6 +80,8 @@ func Start(ctx context.Context, s Syncers, c *Config) (err error) {
 		}
 
 	}
+
+	scheduler.RunAll()
 	scheduler.StartBlocking()
 
 	return nil

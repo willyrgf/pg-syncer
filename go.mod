@@ -4,6 +4,8 @@ go 1.14
 
 require (
 	github.com/go-co-op/gocron v0.3.1
+	github.com/google/uuid v1.1.2
+	github.com/jackc/pgconn v1.6.4
 	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/jackc/pgx/v4 v4.8.1
 	github.com/jasonlvhit/gocron v0.0.1
