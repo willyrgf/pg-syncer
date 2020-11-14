@@ -4,6 +4,7 @@ import (
 	"context"
 
 	// postgres driver
+	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 	log "github.com/sirupsen/logrus"
 )
@@ -13,9 +14,10 @@ type Postgres struct {
 	pool *pgxpool.Pool
 }
 
-// PostgresConn postgres conn repo
+// PostgresConn postgres conn repo and a tx transaction
 type PostgresConn struct {
 	Conn *pgxpool.Conn
+	Tx   pgx.Tx
 }
 
 // NewPostgres return a new postgres repository

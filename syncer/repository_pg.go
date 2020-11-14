@@ -50,7 +50,7 @@ func (s *Service) getTableColumns(ctx context.Context, sourceConn *repository.Po
 // truncateTable
 func (s *Service) truncateTable(ctx context.Context, conn *repository.PostgresConn, schema, table string) (err error) {
 	query := fmt.Sprintf("truncate table %s.%s", schema, table)
-	_, err = conn.Conn.Exec(ctx, query)
+	_, err = conn.Tx.Exec(ctx, query)
 	return
 }
 
@@ -92,7 +92,7 @@ func (s *Service) copyFromSelect(ctx context.Context, sourceConn *repository.Pos
 
 	destinationIdentifier := pgx.Identifier{s.Access.DestinationSchema, s.Access.DestinationTable}
 
-	copyCount, err := destinationConn.Conn.CopyFrom(ctx, destinationIdentifier, sourceColumns, rows)
+	copyCount, err := destinationConn.Tx.CopyFrom(ctx, destinationIdentifier, sourceColumns, rows)
 	if err != nil {
 		log.Errorf("service.copyFromSelect(): sourceConn.Conn.CopyFrom() error=%w", err)
 		return
