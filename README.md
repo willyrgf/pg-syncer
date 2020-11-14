@@ -7,7 +7,7 @@ A query-based syncer between PostgreSQL databases.
 - 9.2 or higher
 
 ## Sync modes
-- fullsync: truncate the destination table and copy all result of the query to then
+- fullsync: truncate the destination table and copy all result of the query to then (in transaction mode)
 - onlydiff: sync only the diff data between the source and destination **(not implemented yet)**
 - partialsync: copy all result from query without truncate the destination **(not implemented yet)**
 
