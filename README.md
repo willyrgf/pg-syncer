@@ -7,8 +7,9 @@ A query-based syncer between PostgreSQL databases.
 
 ## Sync modes
 - fullsync: truncate the destination table and copy all result of the query to then (in transaction mode)
-- onlydiff: sync only the diff data between the source and destination **(not implemented yet)**
-- partialsync: copy all result from query without truncate the destination **(not implemented yet)**
+- TODO: (**these sync modes have not yet been implemented**)
+    - onlydiff: sync only the diff data between the source and destination
+    - partialsync: copy all result from query without truncate the destination
 
 *Check the syncer.toml.sample in the repo to more options and configs*
 
