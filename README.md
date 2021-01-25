@@ -15,7 +15,7 @@ A query-based syncer between PostgreSQL databases.
 ## Configuration examples
 
 ### System configuration (config.toml)
-```
+```sh
 [config]
 dev = true # enable debug
 trace = false # enable the trace of each execution and errors
@@ -27,7 +27,7 @@ url = "postgres://cryp:XkZPqxHC5h5f6koZrzap@127.0.0.1:5432/cryp?pool_max_conns=2
 ```
 
 ### Sync configuration (syncer.toml)
-```
+```sh
 # repositories to syncers services sync the data.
 # we could have a lot of repositories, you'll choose on the
 # syncers configuration below what you'll use
@@ -75,9 +75,14 @@ url = "postgres://report:zVmwGt6Pj67nXkhKNceupBjT@210.252.255.255:5432/report?po
 
 
 ## INSTALLATION
+
+### Downloading the binary
+We keep the last version in the releases of that repository, [access here](https://github.com/cryp-com-br/pg-syncer/releases).
+Just deploy this binary to your server or compile yourself.
+
 ### Compiling
 - Required: Go >= 1.11
-```
+```sh
 # auto build
 git clone https://github.com/cryp-com-br/pg-syncer.git
 cd pg-syncer
@@ -87,10 +92,6 @@ cd pg-syncer
 $ ls bin/
 pgsync-freebsd-amd64  pgsync-linux-amd64
 ```
-
-### Downloading the binary
-We keep the last version in the releases of that repository, [access here](https://github.com/cryp-com-br/pg-syncer/releases).
-Just deploy this binary to your server or compile yourself.
 
 ### Configure like a daemon in FreeBSD:
 ```sh
