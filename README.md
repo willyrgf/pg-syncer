@@ -71,5 +71,47 @@ url = "postgres://report:zVmwGt6Pj67nXkhKNceupBjT@210.252.255.255:5432/report?po
     periodicity_value = "2"
     periodicity_unit = "weeks"
 
+```
 
+
+## INSTALLATION
+### Compiling
+- Required: Go >= 1.11
+```
+# auto build
+git clone https://github.com/cryp-com-br/pg-syncer.git
+cd pg-syncer
+./build.sh
+
+# freebsd and linux binary versions
+$ ls bin/
+pgsync-freebsd-amd64  pgsync-linux-amd64
+```
+
+### Downloading the binary
+We keep the last version in the releases of that repository, [access here](https://github.com/cryp-com-br/pg-syncer/releases).
+Just deploy this binary to your server or compile yourself.
+
+### Configure like a daemon in FreeBSD:
+```sh
+# deploy the binary
+scp bin/pgsync-freebsd-amd64 root@server.com:/usr/local/sbin/pgsync
+ssh -t root@server.com "chmod +x /usr/local/sbin/pgsync"
+
+# deploy the service file
+scp daemon/freebsd/pgsync root@server.com:/usr/local/etc/rc.d/pgsync
+ssh -t root@server.com "chmod +x /usr/local/etc/rc.d/pgsync"
+
+# add on rc.conf
+cat <<EOF >> /etc/rc.conf
+# gostatsd
+pgsync_enable="YES"
+pgsync_conf="/usr/local/etc/pgsync/config.toml"
+pgsync_syncer_conf="/usr/local/etc/pgsync/syncer.toml"
+EOF
+```
+
+### To run manually
+```sh
+ CONF="/etc/pgsync/config.toml" SYNCER_CONF="/etc/pgsync/syncer.toml" pgsync
 ```
